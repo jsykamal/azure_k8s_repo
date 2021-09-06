@@ -1,0 +1,34 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: "azureakscluster-fd19-deployment"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: "azureakscluster-fd19"
+  template:
+    metadata:
+      labels:
+        app: "azureakscluster-fd19"
+    spec:
+      containers:
+        - name: "azureakscluster-fd19"
+          image: "azureregapp.azurecr.io/azureregapp"
+          ports:
+          - containerPort: 5000
+
+# service type loadbalancer       
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: azureakscluster-fd19-svc
+spec:
+  selector:
+    app: azureakscluster-fd19
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: LoadBalancer
